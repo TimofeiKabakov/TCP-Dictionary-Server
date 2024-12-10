@@ -63,6 +63,7 @@ int main(int argc, char *argv[]){
     socklen_t sin_size;
     int yes = 1;
     int rv;
+    bool keyAlreadyExists = false;
 
     char* free_key_address = NULL;
     char* free_value_address = NULL;
@@ -174,6 +175,7 @@ int main(int argc, char *argv[]){
                         if (send(new_fd, "The key you provided is already associated with a value in the dictionary\n", 75, 0) == -1) { 
                             perror("send");
                         }
+                        keyAlreadyExists = true;
                         break;
                     }
 
@@ -194,11 +196,13 @@ int main(int argc, char *argv[]){
                     /* Reset the free addresses for future lookups */
                     free_key_address = NULL;
                     free_value_address = NULL;
-                } else {
+                } else if (!keyAlreadyExists) {
                     if (send(new_fd, "The dictionary is full. Cannot add more key-value pairs\n", 75, 0) == -1) {
                         perror("send");
                     }
                 }
+
+                keyAlreadyExists = false;
             } else if(!strcmp(command, getvalue)) {
                 /* Logic for the getvalue command */
                 flag = 0;
