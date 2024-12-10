@@ -1,5 +1,17 @@
 This code implements a TCP client-server model. The server maintains an in-memory dictionary and listens for commands from the client to manipulate or retrieve data from this dictionary. The client allows a user to issue these commands and see the results.
 
+# Instructions on how to run the program:
+
+1. Open TWO terminals
+2. Run make command in on of the terminals
+3. In the terminal for sever, run
+   $ ./server <port-number>
+   Here, the <port-number> argument has to be an integer between 30000 and 40000
+4. In the terminal for client, run
+   $ ./client <hostname> <port-number>
+   Here, the <port-number> should be the same as in step 2 and <hostname> should be the name of the machine you are running your SERVER on
+5. Now you can do all the operations required in the spec: add, getvalue, getall, remove, quit
+
 ## On the client side (client.c):
 
 - I create a single socket "sockfd" that allows us to connect() to the server and send() the commands read from stdin.
@@ -15,15 +27,3 @@ This code implements a TCP client-server model. The server maintains an in-memor
 - With this info, we can now recv() messages from that machine, parse the received command, maintain the dictionary of values and send() back to that socket if necessary in case of 'getvalue' and 'getall'.
 
 * I also added checks for the existence of elements in the dictionary. If there are no elements and the user commands 'getall', we get a message "No elements in the dictionary". In case of 'getvalue' it would be "No such element in the dictionary" if there are either no elements at all or no element with a provided key.
-
-# Instructions on how to run the program:
-
-1. Open TWO terminals
-2. Run make command in on of the terminals
-3. In the terminal for sever, run
-   $ ./server <port-number>
-   Here, the <port-number> argument has to be an integer between 30000 and 40000
-4. In the terminal for client, run
-   $ ./client <hostname> <port-number>
-   Here, the <port-number> should be the same as in step 2 and <hostname> should be the name of the machine you are running your SERVER on
-5. Now you can do all the operations required in the spec: add, getvalue, getall, remove, quit
