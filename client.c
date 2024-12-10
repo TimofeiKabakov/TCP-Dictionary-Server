@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
     char *hostName, *command;
     char delimiters[] = " ";
     char line[MAXDATASIZE];
-    char lineCopy[MAXDATASIZE];
+    char lineToSend[MAXDATASIZE];
     char bufReceive[MAXDATASIZE * MAXELEMENTS];
     char bufReceiveAdd[MAXDATASIZE];
 
@@ -125,8 +125,8 @@ int main(int argc, char *argv[]){
 
     /* Constantly wait for the input from the user */
     while(fgets(line, sizeof(line), stdin)) {
-        strncpy(lineCopy, line, sizeof(lineCopy) - 1);
-        getRidOfNewLine(lineCopy);
+        strncpy(lineToSend, line, sizeof(lineToSend) - 1);
+        getRidOfNewLine(lineToSend);
 
         memset(bufReceive, 0, sizeof(bufReceive));
         memset(bufReceive, 0, sizeof(bufReceiveAdd));
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
         getRidOfNewLine(command);
 
         if(isCommandValid(command, validCommands, 5)) {
-            if (send(sockfd, lineCopy, sizeof(lineCopy), 0) == -1) {
+            if (send(sockfd, lineToSend, sizeof(lineToSend), 0) == -1) {
                 perror("send");
             }
 
