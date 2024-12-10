@@ -43,14 +43,6 @@ void getRidOfNewLine(char* str) {
     }
 }
 
-/* Get sockaddr, IPv4 or IPv6 */
-void *get_in_addr(struct sockaddr *sa) {
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*) sa)->sin_addr);
-    }
-    return &(((struct sockaddr_in6*) sa)->sin6_addr);
-}
-
 int main(int argc, char *argv[]){
     int port, numbytes, flag;
     char buf[MAXDATASIZE], interbufSend[MAXDATASIZE];
@@ -177,9 +169,9 @@ int main(int argc, char *argv[]){
         
             command = strtok(buf, delimiters);
             getRidOfNewLine(command);
-            
+
             if(!strcmp(command, add)) {
-                /* NOT AN EFFICIENT SOLUTION - traverse the dictionary to look for free space */
+                /* Logic for the add command */
                 strcpy(new_key, strtok(NULL, delimiters));
                 for (i = 0; i < MAXELEMENTS; i++) {
                     /* Check if there is already a value with the same key */
@@ -194,6 +186,7 @@ int main(int argc, char *argv[]){
                     }
                 }
             } else if(!strcmp(command, getvalue)) {
+                /* Logic for the getvalue command */
                 flag = 0;
                 strcpy(new_key, strtok(NULL, delimiters));
                 for (i = 0; i < MAXELEMENTS; i++) {
@@ -212,6 +205,7 @@ int main(int argc, char *argv[]){
                     }
                 }
             } else if(!strcmp(command, getall)) {
+                /* Logic for the getall command */
                 flagGetall = 0;
                 sprintf(interbufSend, "Contents of the dictionaty:\n");
                 strcat(bufSend, interbufSend);
@@ -233,6 +227,7 @@ int main(int argc, char *argv[]){
                 }
                 memset(bufSend, 0, sizeof(bufSend));
             } else if(!strcmp(command, remove)) {
+                /* Logic for the remove command */
                 strcpy(new_key, strtok(NULL, delimiters));
                 for (i = 0; i < MAXELEMENTS; i++) {
                     if(!strcmp(dict[i].key, new_key)) {
