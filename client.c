@@ -57,24 +57,19 @@ int main(int argc, char *argv[]){
     char line[MAXDATASIZE];
     char lineToSend[MAXDATASIZE];
     char bufReceive[MAXDATASIZE * MAXELEMENTS];
-    char bufReceiveAdd[MAXDATASIZE];
-
-    /* Allowed commands*/
-    char add[] = "add";
-    char getvalue[] = "getvalue";
-    char getall[] = "getall";
-    char remove[] = "remove";
-    char quit[] = "quit";
+    char bufReceiveAdd[MAXDATASIZE];    
 
     char *validCommands[5];
 
     int sockfd, rv;
     struct addrinfo hints, *servinfo, *iter;
 
-    validCommands[0] = add;
-    validCommands[1] = getvalue;
-    validCommands[2] = getall;
-    validCommands[3] = remove;
+    /* Allowed commands*/
+    char quit[] = "quit";
+    validCommands[0] = "add";
+    validCommands[1] = "getvalue";
+    validCommands[2] = "getall";
+    validCommands[3] = "remove";
     validCommands[4] = quit;
 
     /* Check for the right number of arguments */
@@ -135,30 +130,30 @@ int main(int argc, char *argv[]){
         getRidOfNewLine(command);
 
         if(isCommandValid(command, validCommands, 5)) {
+            if (!strcmp(command, quit)) {
+                close(sockfd);
+                exit(1);
+            }
+            
+            /* Send the line command to the server */
             if (send(sockfd, lineToSend, sizeof(lineToSend), 0) == -1) {
                 perror("send");
             }
 
-            if (!strcmp(command, add) || !strcmp(command, getall) || !strcmp(command, getvalue)) {
-                /* Get back a response with output */
-                numbytes = recv(sockfd, bufReceive, sizeof(bufReceive), 0);
+            /* Get back a response with output */
+            numbytes = recv(sockfd, bufReceive, sizeof(bufReceive), 0);
 
-                if (numbytes == -1) {
-                    perror("recv");
-                    exit(1);
-                }
-
-                if (numbytes == 0) {
-                    printf("Connection closed\n");
-                    exit(1);
-                }
-
-                printf("%s", bufReceive);
-            } else if (!strcmp(command, quit)) {
-                close(sockfd);
+            if (numbytes == -1) {
+                perror("recv");
                 exit(1);
             }
 
+            if (numbytes == 0) {
+                printf("Connection closed\n");
+                exit(1);
+            }
+
+            printf("%s", bufReceive);
         } else {
             printf("Command is not valid\n");
         }

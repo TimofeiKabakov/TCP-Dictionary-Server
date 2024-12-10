@@ -252,7 +252,12 @@ int main(int argc, char *argv[]){
                         strcpy(dict[i].key, free);
                     }
                 }
+                
                 getRidOfNewLine(new_key);
+
+                if (send(new_fd, "The key-value pair has been removed\n", 40, 0) == -1) { 
+                    perror("send");
+                }
             }
         }
     }
