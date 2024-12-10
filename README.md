@@ -1,15 +1,29 @@
 This code implements a TCP client-server model. The server maintains an in-memory dictionary and listens for commands from the client to manipulate or retrieve data from this dictionary. The client allows a user to issue these commands and see the results.
 
+Available commands:
+
+- `$ add <key> <value>`: add (key, value) pair, if there is no existing pair with same key value
+- `$ getvalue <key>`: return value for the matching key in the (key, value) pair, if any
+- `$ getall`: return all (key, value) pairs
+- `$ remove <key>`: remove matching (key, value) pair, if any
+- `$ quit`: terminate client
+
 # Instructions on how to run the program:
 
 1. Open TWO terminals
 2. Run make command in on of the terminals
-3. In the terminal for sever, run
-   $ ./server <port-number>
-   Here, the <port-number> argument has to be an integer between 30000 and 40000
-4. In the terminal for client, run
-   $ ./client <hostname> <port-number>
-   Here, the <port-number> should be the same as in step 2 and <hostname> should be the name of the machine you are running your SERVER on
+3. In the terminal for sever, run:
+
+   `$ ./server <port-number>`
+
+   Here, the **port-number** argument has to be an integer between 30000 and 40000
+
+4. In the terminal for client, run:
+
+   ` $ ./client <hostname> <port-number>`
+
+   Here, the **hostname** should be the name of the machine you are running your SERVER on and the **port-number** should be the same as in step 2
+
 5. Now you can do all the operations required in the spec: add, getvalue, getall, remove, quit
 
 ## On the client side (client.c):
