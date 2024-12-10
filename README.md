@@ -16,8 +16,6 @@ Available commands:
 
    `$ ./server <port-number>`
 
-   Here, the **port-number** argument has to be an integer between 30000 and 40000
-
 4. In the terminal for client, run:
 
    ` $ ./client <hostname> <port-number>`
@@ -30,7 +28,7 @@ Available commands:
 
 - I create a single socket **sockfd** that allows us to connect() to the server and send() the commands read from stdin.
 
-- I also make sure that the commands provided by the user are the allowed ones. If so, I send the entire command to the server.
+- I also make sure that the commands provided by the user are the allowed ones. If so, I send the command to the server.
 
 ## On the server side (server.c):
 
@@ -39,5 +37,3 @@ Available commands:
 - When a connection has been accept()ed, I initialize a new socket **new_fd**. **new_fd** contains information about the machine whose request has been accept()ed.
 
 - With this info, we can now recv() messages from that machine, parse the received command, maintain the dictionary of values and send() back to that socket if necessary in case of 'getvalue' and 'getall'.
-
-* I also added checks for the existence of elements in the dictionary. If there are no elements and the user commands 'getall', we get a message "No elements in the dictionary". In case of 'getvalue' it would be "No such element in the dictionary" if there are either no elements at all or no element with a provided key.
