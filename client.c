@@ -139,7 +139,7 @@ int main(int argc, char *argv[]){
                 perror("send");
             }
 
-            if (!strcmp(command, getall) || !strcmp(command, getvalue)) {
+            if (!strcmp(command, add) || !strcmp(command, getall) || !strcmp(command, getvalue)) {
                 /* Get back a response with output */
                 numbytes = recv(sockfd, bufReceive, sizeof(bufReceive), 0);
 

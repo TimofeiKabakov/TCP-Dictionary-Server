@@ -44,7 +44,7 @@ void getRidOfNewLine(char* str) {
 }
 
 int main(int argc, char *argv[]){
-    int port, numbytes, flag;
+    int numbytes, flag;
     char buf[MAXDATASIZE], interbufSend[MAXDATASIZE];
     char bufSend[MAXDATASIZE * MAXELEMENTS];
     char *command, *new_key;
@@ -64,6 +64,9 @@ int main(int argc, char *argv[]){
     int yes = 1;
     int rv;
 
+    char* free_key_address = NULL;
+    char* free_value_address = NULL;
+
     /* Storage (Dictionary) */
     MESSAGE dict[MAXELEMENTS];
 
@@ -76,14 +79,6 @@ int main(int argc, char *argv[]){
     /* Check for invalid input (if the port number is in fact a number) */
     if(checkIfNumber(argv[1]) == false) {
         printf("Invalid arguments: the port number should be an integer\n");
-        exit(1);
-    }
-
-    port = atoi(argv[1]);
-
-    /* Check if the port number is within the range allowed */
-    if(!(port >= 30001 && port <= 40000)){
-        printf("Invalid port number: the port number must be between 30001 and 40000\n");
         exit(1);
     }
 
@@ -176,13 +171,32 @@ int main(int argc, char *argv[]){
                 for (i = 0; i < MAXELEMENTS; i++) {
                     /* Check if there is already a value with the same key */
                     if(!strcmp(dict[i].key, new_key)) {
+                        if (send(new_fd, "The key you provided is already associated with a value in the dictionary\n", 75, 0) == -1) { 
+                            perror("send");
+                        }
                         break;
                     }
 
-                    if(!strcmp(dict[i].key, free)) {
-                        strcpy(dict[i].key, new_key);
-                        strcpy(dict[i].value, strtok(NULL, delimiters));
-                        break;
+                    if(!strcmp(dict[i].key, free) && !free_key_address) {
+                        /* Memorize the address of the first free entry */
+                        free_key_address = dict[i].key;
+                        free_value_address = dict[i].value;
+                    }
+                }
+
+                if (free_key_address) { 
+                    strcpy(free_key_address, new_key);
+                    strcpy(free_value_address, strtok(NULL, delimiters));
+                    if (send(new_fd, "The provided key-value pair has been added to the dictionary\n", 75, 0) == -1) {
+                        perror("send");
+                    }
+
+                    /* Reset the free addresses for future lookups */
+                    free_key_address = NULL;
+                    free_value_address = NULL;
+                } else {
+                    if (send(new_fd, "The dictionary is full. Cannot add more key-value pairs\n", 75, 0) == -1) {
+                        perror("send");
                     }
                 }
             } else if(!strcmp(command, getvalue)) {
