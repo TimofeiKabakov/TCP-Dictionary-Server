@@ -22,7 +22,7 @@ Available commands:
 
    Here, the **hostname** should be the name of the machine you are running your SERVER on and the **port-number** should be the same as in step 3
 
-5. Now you can do all the operations required in the spec: add, getvalue, getall, remove, quit
+5. You can now run the commands!
 
 ## On the client side (client.c):
 
