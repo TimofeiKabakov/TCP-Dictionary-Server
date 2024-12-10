@@ -37,8 +37,21 @@ void getRidOfNewLine(char* str) {
     }
 }
 
+/* Check if the provided command is from the allowed lists */
+bool isCommandValid(char* command, char* validCommands[], size_t size) {
+    size_t i;
+    bool is_command_valid = false;
+    for(i = 0; i < size; i++) {
+        if(!strcmp(command, validCommands[i])) {
+            is_command_valid = true;
+            break;
+        }
+    }
+    return is_command_valid;
+}
+
 int main(int argc, char *argv[]){
-    int port, numbytes;
+    int numbytes;
     char *hostName, *command;
     char delimiters[] = " ";
     char line[MAXDATASIZE];
@@ -53,8 +66,16 @@ int main(int argc, char *argv[]){
     char remove[] = "remove";
     char quit[] = "quit";
 
+    char *validCommands[5];
+
     int sockfd, rv;
     struct addrinfo hints, *servinfo, *iter;
+
+    validCommands[0] = add;
+    validCommands[1] = getvalue;
+    validCommands[2] = getall;
+    validCommands[3] = remove;
+    validCommands[4] = quit;
 
     /* Check for the right number of arguments */
     if (argc != 3) {
@@ -69,11 +90,8 @@ int main(int argc, char *argv[]){
     }
 
     hostName = argv[1];
-
-    /* Convert port string to a port number */
-    port = atoi(argv[2]);
     
-    /* CONNECT TO THE SERVER */
+    /* Connect to the server */
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -105,12 +123,6 @@ int main(int argc, char *argv[]){
 
     freeaddrinfo(servinfo);
 
-    /* Check if the port number is within the range allowed */
-    if(!(port >= 30001 && port <= 40000)){
-        printf("Invalid port number: the port number must be between 30001 and 40000\n");
-        exit(1);
-    }
-
     /* Constantly wait for the input from the user */
     while(fgets(line, sizeof(line), stdin)) {
         strncpy(lineCopy, line, sizeof(lineCopy) - 1);
@@ -122,7 +134,7 @@ int main(int argc, char *argv[]){
         command = strtok(line, delimiters);
         getRidOfNewLine(command);
 
-        if(!strcmp(command, add) || !strcmp(command, getvalue) || !strcmp(command, getall) || !strcmp(command, remove)) {
+        if(isCommandValid(command, validCommands, 5)) {
             if (send(sockfd, lineCopy, sizeof(lineCopy), 0) == -1) {
                 perror("send");
             }
@@ -142,11 +154,13 @@ int main(int argc, char *argv[]){
                 }
 
                 printf("%s", bufReceive);
+            } else if (!strcmp(command, quit)) {
+                close(sockfd);
+                exit(1);
             }
 
-        } else if(!strcmp(command, quit)) {
-            close(sockfd);
-            exit(1);
+        } else {
+            printf("Command is not valid\n");
         }
     }
 
