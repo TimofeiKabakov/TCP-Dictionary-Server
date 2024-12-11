@@ -34,6 +34,6 @@ Available commands:
 
 - I set up a local socket **sockfd** and bind to the provided port number. This socket will be used to listen() to and accept() incoming connections.
 
-- When a connection has been accept()ed, I initialize a new socket **new_fd**. **new_fd** contains information about the machine whose request has been accept()ed.
+- When a connection has been accept()ed, I initialize a new socket **new_fd**, which contains information about the machine whose request has been accept()ed.
 
-- With this info, we can now recv() messages from that machine, parse the received command, maintain the dictionary of values and send() back to that socket if necessary in case of 'getvalue' and 'getall'.
+- With this info, we can now recv() messages from that machine, parse the received command, maintain the dictionary of values and send() back to that socket if necessary
