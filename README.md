@@ -10,19 +10,15 @@ Available commands:
 
 # Instructions on how to run the program:
 
-1. Open TWO terminals
-2. Run make command in on of the terminals
-3. In the terminal for sever, run:
+1. For the sever, run:
 
    `$ ./server <port-number>`
 
-4. In the terminal for client, run:
+2. For the client, run:
 
    ` $ ./client <hostname> <port-number>`
 
    Here, the **hostname** should be the name of the machine you are running your SERVER on and the **port-number** should be the same as in step 3
-
-5. You can now run the commands!
 
 ## On the client side (client.c):
 
