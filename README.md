@@ -1,3 +1,4 @@
+# Project Description:
 This code implements a TCP client-server model. The server maintains an in-memory dictionary and listens for commands from the client to manipulate or retrieve data from this dictionary. The client allows a user to issue these commands and see the results.
 
 Available commands:
@@ -8,8 +9,7 @@ Available commands:
 - `$ remove <key>`: remove matching (key, value) pair, if any
 - `$ quit`: terminate client
 
-# Instructions on how to run the program:
-
+# Build & Run Instructions:
 1. For the sever, run:
 
    `$ ./server <port-number>`
@@ -20,13 +20,14 @@ Available commands:
 
    Here, the **hostname** should be the name of the machine you are running your SERVER on and the **port-number** should be the same as in step 3
 
-## On the client side (client.c):
+# Implementation Details:
+### On the client side (client.c):
 
 - I create a single socket **sockfd** that allows us to connect() to the server and send() the commands read from stdin.
 
 - I also make sure that the commands provided by the user are the allowed ones. If so, I send the command to the server.
 
-## On the server side (server.c):
+### On the server side (server.c):
 
 - I set up a local socket **sockfd** and bind to the provided port number. This socket will be used to listen() to and accept() incoming connections.
 
